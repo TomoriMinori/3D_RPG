@@ -37,6 +37,7 @@ public class EnemyUI : MonoBehaviour
 
 	public void SetTargetTrans( string name, EnemyType type, Transform target, float per )
 	{
+		Init( );
 		gameObject.SetActive( true );
 		isUse = true;
 		enemyType = type;
@@ -57,18 +58,6 @@ public class EnemyUI : MonoBehaviour
 		StartCoroutine( CoUpdate( ) );
 	}
 
-	public void SetHpSlider( float per ) //다른 곳에서 hpslider만 호출할 때
-	{
-		if( !gameObject.activeSelf )
-		{
-			gameObject.SetActive( true );
-			StartCoroutine( CoUpdate( ) );
-		}
-		HpPer = per;
-		hpSlider.value = HpPer;
-		playTime = maxTime;
-	}
-
 	IEnumerator CoUpdate( )
 	{
 		playTime = maxTime;
@@ -84,5 +73,17 @@ public class EnemyUI : MonoBehaviour
 		}
 		isUse = false;
 		gameObject.SetActive( false );
+	}
+
+	public void SetHpSlider( float per ) //다른 곳에서 hpslider만 호출할 때
+	{
+		if( !gameObject.activeSelf )
+		{
+			gameObject.SetActive( true );
+			StartCoroutine( CoUpdate( ) );
+		}
+		HpPer = per;
+		hpSlider.value = HpPer;
+		playTime = maxTime;
 	}
 }

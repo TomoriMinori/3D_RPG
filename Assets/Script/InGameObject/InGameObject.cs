@@ -9,20 +9,20 @@ public enum TimeCtrlState
 	DefaultToChange,
 	StopToCur
 }
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 [AddComponentMenu( "InGameObject" )]
-public class InGameObject : MonoBehaviour
+public class InGameObject : PooledObject
 {
 	public Animator i_Animator;
 	public Rigidbody i_Rigidbody;
 	public NavMeshAgent i_NavMeshAgent;
 	public ParticleSystem i_ParticleSystem;
 	public AudioSource i_AudioSource;
-	public WaitForSeconds i_WaitForSeconds = new WaitForSeconds(0.02f);
+	public WaitForSeconds i_WaitForSeconds = new WaitForSeconds(0.0166666f);
 	public WaitForSeconds FSM_WaitForSeconds = new WaitForSeconds(0.1f);
 
 	protected float i_TimeScale = 1f;
-	protected float i_TimeDelta = 0.02f;
+	protected float i_TimeDelta = 0.0166666f;
 
 	private float defaultTimeScale;
 
@@ -47,7 +47,7 @@ public class InGameObject : MonoBehaviour
 		SaveDefaultScale( );
 	}
 
-	protected void AwakeInit( )
+	public virtual void AwakeInit( )
 	{
 		if( i_Animator == null )
 			i_Animator = GetComponent<Animator>( );
@@ -93,7 +93,7 @@ public class InGameObject : MonoBehaviour
 			StopCoroutine( lastRoutine );
 		Debug.Log( "조작시작" );
 		i_TimeScale = defaultTimeScale * _timeScale;
-		i_TimeDelta = 0.02f / i_TimeScale;
+		i_TimeDelta = 0.0166666f * i_TimeScale;
 		i_WaitForSeconds = new WaitForSeconds( i_TimeDelta );
 		FSM_WaitForSeconds = new WaitForSeconds( i_TimeDelta * 2f );
 		TimeScaleCtrl( );
@@ -109,7 +109,7 @@ public class InGameObject : MonoBehaviour
 		Debug.Log( "조작해제" );
 		I_IsChange = false;
 		i_TimeScale = defaultTimeScale;
-		i_TimeDelta = 0.02f / i_TimeScale;
+		i_TimeDelta = 0.0166666f * i_TimeScale;
 		i_WaitForSeconds = new WaitForSeconds( i_TimeDelta );
 		FSM_WaitForSeconds = new WaitForSeconds( i_TimeDelta * 2f );
 		if( i_Animator != null )

@@ -468,6 +468,72 @@ public class Skill_Player_Attack_Thrusting : Skill_Player
 	}
 }
 
+public class Skill_Player_Attack_TimeWarpBoom : Skill_Player
+{
+	int attackState = 0;
+	public Skill_Player_Attack_TimeWarpBoom( PlayerCtrl _charCtrl, int skillLevel ) : base( _charCtrl )
+	{
+		SkillType = CharState.attack;
+		AttackState = AttackState.bladeDance;
+		playTime = 1.9f;
+		id = 1;
+		titleStr = "시간왜곡 폭탄";
+		explainStr = "폭탄을 던져 반경 오브젝트들을 느려지게 만든다.";
+
+		perAd = new float[] { 0.3f, 0.5f, 0.8f };   //느려지는 per
+		Ad = new float[] { 5f, 7f, 10f };           //지속시간
+		maxCoolTime = new float[] { 5f, 5f, 5f };
+		needLevel = new int[] { 1, 1, 2 };
+
+		//buttonScript = PlayerUIMgr.Instance.skillBtns[1];
+		iconNum = 4;
+	}
+
+	public override string EffectStr( int level )
+	{
+		StringBuilder sb = new StringBuilder( );
+		sb.Append( "피격 대상에게 " );
+		sb.Append( Ad[level] );
+		sb.Append( "초간 " );
+		sb.Append( Mathf.RoundToInt( perAd[level] * 100f ).ToString( "00" ) );
+		sb.Append( "% 의 시간왜곡 부여." );
+		sb.Append( "\n쿨타임 : " );
+		sb.Append( maxCoolTime[level] );
+		sb.Append( "초" );
+		return sb.ToString( );
+	}
+
+	public override void SkillColSetting( )
+	{
+		charCtrl.playerAtkScript.atk[3].ColSetting( charCtrl.status.Ad * perAd[skillLevel] * 0.15f, charCtrl.status.Cr, AttackType.normal, DamageType.melee );
+		charCtrl.playerAtkScript.atk[4].ColSetting( charCtrl.status.Ad * perAd[skillLevel] * 0.25f, charCtrl.status.Cr, AttackType.normal, DamageType.melee );
+		charCtrl.playerAtkScript.atk[5].ColSetting( charCtrl.status.Ad * perAd[skillLevel] * 0.25f, charCtrl.status.Cr, AttackType.normal, DamageType.melee );
+		charCtrl.playerAtkScript.atk[6].ColSetting( charCtrl.status.Ad * perAd[skillLevel] * 0.35f, charCtrl.status.Cr, AttackType.normal, DamageType.melee );
+	}
+
+	public override void SkillCallback( PlayerCtrl _charCtrl, object _obj )
+	{
+	}
+
+	public override bool Able( )
+	{
+		if( charCtrl.state == CharState.stun )
+			return false;
+		if( charCtrl.atkState != AttackState.none )
+			return false;
+		return true;
+	}
+	protected override IEnumerator CoPlay( )
+	{
+		charCtrl.katanaTrail.enabled = true;
+		charCtrl.state = CharState.attack;
+		charCtrl.atkState = AttackState.bladeDance;
+		charCtrl.i_Animator.SetTrigger( "SkillA" );
+
+		yield return charCtrl.StartCoroutine( CoPlayingCheck( ) );
+		//임시. 애니메이션이 끝날때 atkState를 none으로 바꾸게끔 해야함.
+	}
+}
 
 
 

@@ -53,6 +53,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f4277dd8af83e504ba852fa942f6ecd8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  poolItemName: Explosion
+  prefab: {fileID: 1274521381080454}
+  poolCount: 5
+  poolList: []
   i_Animator: {fileID: 0}
   i_Rigidbody: {fileID: 0}
   i_NavMeshAgent: {fileID: 0}
